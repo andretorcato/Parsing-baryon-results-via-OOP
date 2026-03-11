@@ -1,0 +1,14 @@
+---
+title: "Home"
+---
+
+# Purpose
+
+This website documents the code for parsing baryon results, located in multipled .txt files, into one .txt file called **All_Results.txt**.
+
+## Planned sections
+
+- Input data
+- Output structure
+- OOP architecture
+- Implementation log

@@ -1,0 +1,23 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "parsing_baryon_results",
+    "section": "",
+    "text": "This site is built with Quarto and published automatically with GitHub Actions.\n\n\nquarto preview\n\n\n\nPushes to main trigger a GitHub Actions workflow that renders this site and deploys it to GitHub Pages."
+  },
+  {
+    "objectID": "index.html#local-preview",
+    "href": "index.html#local-preview",
+    "title": "parsing_baryon_results",
+    "section": "",
+    "text": "quarto preview"
+  },
+  {
+    "objectID": "index.html#deployment",
+    "href": "index.html#deployment",
+    "title": "parsing_baryon_results",
+    "section": "",
+    "text": "Pushes to main trigger a GitHub Actions workflow that renders this site and deploys it to GitHub Pages."
+  }
+]
