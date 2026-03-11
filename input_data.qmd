@@ -91,6 +91,3 @@ In the end, the allowed assignements are:
 - `s`, `c` and `b` for one heavy flavor assignements
 - `sc`, `sb` and `cb` for two heavy flavor assignements
 - `scb` for three heavy flavor assignements
-
-
-
