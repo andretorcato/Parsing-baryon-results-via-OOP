@@ -5,6 +5,7 @@ title: "About"
 # About this site
 
 This site is built with Quarto and deployed with GitHub pages. This was a learning oportunity for:
+
 - Programming with OOP in Python for a quite simple task that helps tremendously in writing my PhD research documentation
 - Using Quarto to write documentation via markdown-like syntax
 - Using GitHub pages that, with Quarto, deploys these files as html
