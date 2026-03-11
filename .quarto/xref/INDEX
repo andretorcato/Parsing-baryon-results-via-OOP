@@ -7,5 +7,14 @@
   },
   "output_file.qmd": {
     "output_file.html": "b4a37da1"
+  },
+  "python_syntax.qmd": {
+    "python_syntax.html": "0e2b9af9"
+  },
+  "architecture_plan.qmd": {
+    "architecture_plan.html": "dfde7544"
+  },
+  "about.qmd": {
+    "about.html": "5da7e424"
   }
 }

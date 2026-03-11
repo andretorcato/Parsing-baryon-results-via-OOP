@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Input Data Sources – OOP code for parsing baryon results</title>
+<title>About – OOP code for parsing baryon results</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -96,11 +96,11 @@ ul.task-list li input[type="checkbox"] {
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./about.html"> 
+    <a class="nav-link active" href="./about.html" aria-current="page"> 
 <span class="menu-text">About</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="./input_data.html" aria-current="page"> 
+    <a class="nav-link" href="./input_data.html"> 
 <span class="menu-text">Input data sources</span></a>
   </li>  
   <li class="nav-item">
@@ -131,49 +131,7 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#purpose" id="toc-purpose" class="nav-link active" data-scroll-target="#purpose">Purpose</a>
-  <ul class="collapse">
-  <li><a href="#root-directory" id="toc-root-directory" class="nav-link" data-scroll-target="#root-directory">Root directory</a></li>
-  <li><a href="#baryon-directories" id="toc-baryon-directories" class="nav-link" data-scroll-target="#baryon-directories">Baryon directories</a></li>
-  <li><a href="#baryon-naming-conventions" id="toc-baryon-naming-conventions" class="nav-link" data-scroll-target="#baryon-naming-conventions">Baryon naming conventions</a>
-  <ul class="collapse">
-  <li><a href="#light-only-baryons" id="toc-light-only-baryons" class="nav-link" data-scroll-target="#light-only-baryons">Light-only baryons</a></li>
-  <li><a href="#one-heavy-flavor-type" id="toc-one-heavy-flavor-type" class="nav-link" data-scroll-target="#one-heavy-flavor-type">One heavy-flavor type</a></li>
-  <li><a href="#two-heavy-flavor-types" id="toc-two-heavy-flavor-types" class="nav-link" data-scroll-target="#two-heavy-flavor-types">Two heavy-flavor types</a></li>
-  <li><a href="#three-heavy-flavor-types" id="toc-three-heavy-flavor-types" class="nav-link" data-scroll-target="#three-heavy-flavor-types">Three heavy-flavor types</a></li>
-  </ul></li>
-  <li><a href="#heavy-flavor-ordering-rule" id="toc-heavy-flavor-ordering-rule" class="nav-link" data-scroll-target="#heavy-flavor-ordering-rule">Heavy-flavor ordering rule</a></li>
-  <li><a href="#channel-naming-rules" id="toc-channel-naming-rules" class="nav-link" data-scroll-target="#channel-naming-rules">Channel naming rules</a>
-  <ul class="collapse">
-  <li><a href="#heavy-flavor-specification" id="toc-heavy-flavor-specification" class="nav-link" data-scroll-target="#heavy-flavor-specification">Heavy-flavor specification</a></li>
-  <li><a href="#j-values" id="toc-j-values" class="nav-link" data-scroll-target="#j-values">J values</a></li>
-  <li><a href="#parity-values" id="toc-parity-values" class="nav-link" data-scroll-target="#parity-values">Parity values</a></li>
-  </ul></li>
-  <li><a href="#complete-channel-prefixes" id="toc-complete-channel-prefixes" class="nav-link" data-scroll-target="#complete-channel-prefixes">Complete channel prefixes</a></li>
-  <li><a href="#analysis-file-locations" id="toc-analysis-file-locations" class="nav-link" data-scroll-target="#analysis-file-locations">Analysis file locations</a>
-  <ul class="collapse">
-  <li><a href="#partial-waves" id="toc-partial-waves" class="nav-link" data-scroll-target="#partial-waves">Partial waves</a></li>
-  <li><a href="#diquarks" id="toc-diquarks" class="nav-link" data-scroll-target="#diquarks">Diquarks</a></li>
-  </ul></li>
-  <li><a href="#apmeb_summary.txt" id="toc-apmeb_summary.txt" class="nav-link" data-scroll-target="#apmeb_summary.txt"><code>APMEB_Summary.txt</code></a>
-  <ul class="collapse">
-  <li><a href="#structure" id="toc-structure" class="nav-link" data-scroll-target="#structure">Structure</a></li>
-  <li><a href="#channel-sub-blocks" id="toc-channel-sub-blocks" class="nav-link" data-scroll-target="#channel-sub-blocks">Channel sub-blocks</a></li>
-  </ul></li>
-  <li><a href="#partwavs_analysis.txt-files" id="toc-partwavs_analysis.txt-files" class="nav-link" data-scroll-target="#partwavs_analysis.txt-files"><code>PartWavs_Analysis.txt</code> files</a>
-  <ul class="collapse">
-  <li><a href="#structure-1" id="toc-structure-1" class="nav-link" data-scroll-target="#structure-1">Structure</a></li>
-  <li><a href="#components" id="toc-components" class="nav-link" data-scroll-target="#components">Components</a></li>
-  <li><a href="#interval-rule" id="toc-interval-rule" class="nav-link" data-scroll-target="#interval-rule">Interval rule</a></li>
-  </ul></li>
-  <li><a href="#dq_analysis.txt-files" id="toc-dq_analysis.txt-files" class="nav-link" data-scroll-target="#dq_analysis.txt-files"><code>DQ_Analysis.txt</code> files</a>
-  <ul class="collapse">
-  <li><a href="#shared-structure" id="toc-shared-structure" class="nav-link" data-scroll-target="#shared-structure">Shared structure</a></li>
-  <li><a href="#interval-rule-1" id="toc-interval-rule-1" class="nav-link" data-scroll-target="#interval-rule-1">Interval rule</a></li>
-  <li><a href="#diquark-types-by-baryon" id="toc-diquark-types-by-baryon" class="nav-link" data-scroll-target="#diquark-types-by-baryon">Diquark types by baryon</a></li>
-  </ul></li>
-  <li><a href="#summary-of-how-the-program-uses-the-inputs" id="toc-summary-of-how-the-program-uses-the-inputs" class="nav-link" data-scroll-target="#summary-of-how-the-program-uses-the-inputs">Summary of how the program uses the inputs</a></li>
-  </ul></li>
+  <li><a href="#purpose" id="toc-purpose" class="nav-link active" data-scroll-target="#purpose">Purpose</a></li>
   </ul>
 </nav>
     </div>
@@ -182,7 +140,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Input Data Sources</h1>
+<h1 class="title">About</h1>
 </div>
 
 
@@ -201,344 +159,14 @@ ul.task-list li input[type="checkbox"] {
 
 <section id="purpose" class="level1">
 <h1>Purpose</h1>
-<p>This page documents the input files and naming conventions used by the parsing project. The goal is to explain where the raw data lives, how the files are named, and how the parser matches the different inputs for each baryon channel.</p>
-<section id="root-directory" class="level2">
-<h2 class="anchored" data-anchor-id="root-directory">Root directory</h2>
-<p>The parent directory contains:</p>
+<p>This site is built with Quarto and deployed with GitHub pages. This was a learning oportunity for:</p>
 <ul>
-<li>the Python parsing code</li>
-<li><code>APMEB_Summary.txt</code></li>
-<li>the <code>baryons/</code> folder</li>
+<li>Programming with OOP in Python for a quite simple task that helps tremendously in writing my PhD research documentation</li>
+<li>Using Quarto to write documentation via markdown-like syntax</li>
+<li>Using GitHub pages that, with Quarto, deploys these files as html</li>
 </ul>
-</section>
-<section id="baryon-directories" class="level2">
-<h2 class="anchored" data-anchor-id="baryon-directories">Baryon directories</h2>
-<p>Inside <code>baryons/</code>, there are 12 baryon-category folders:</p>
-<ul>
-<li><code>Delta</code></li>
-<li><code>Lambda_f</code></li>
-<li><code>Nucleon</code></li>
-<li><code>Omega_fff</code></li>
-<li><code>Omega_ffg</code></li>
-<li><code>Omega_fgg</code></li>
-<li><code>Omega_fgh</code></li>
-<li><code>OmegaPrime_fgh</code></li>
-<li><code>Sigma_f</code></li>
-<li><code>Xi_ff</code></li>
-<li><code>Xi_fg</code></li>
-<li><code>XiPrime_fg</code></li>
-</ul>
-<p>This organization uses the symbols <code>f</code>, <code>g</code>, and <code>h</code> to represent heavy flavors. In practice, the baryons fall into the following groups:</p>
-<ul>
-<li>Three equal quark flavors: <code>Nucleon</code>, <code>Delta</code>, <code>Omega_fff</code></li>
-<li>Two equal quark flavors plus one heavier flavor: <code>Lambda_f</code>, <code>Sigma_f</code>, <code>Omega_ffg</code></li>
-<li>Two equal quark flavors plus one lighter flavor: <code>Xi_ff</code>, <code>Omega_fgg</code></li>
-<li>Three different quark flavors: <code>Xi_fg</code>, <code>XiPrime_fg</code>, <code>Omega_fgh</code>, <code>OmegaPrime_fgh</code></li>
-</ul>
-</section>
-<section id="baryon-naming-conventions" class="level2">
-<h2 class="anchored" data-anchor-id="baryon-naming-conventions">Baryon naming conventions</h2>
-<section id="light-only-baryons" class="level3">
-<h3 class="anchored" data-anchor-id="light-only-baryons">Light-only baryons</h3>
-<p>Baryons without an underscore contain only the light flavor <code>n</code>. Here <code>n</code> represents the light up/down sector, since the calculation does not distinguish those flavors through purely gluonic interactions.</p>
-<p>The baryons in this class are:</p>
-<ul>
-<li><code>Delta</code></li>
-<li><code>Nucleon</code></li>
-</ul>
-<p>Different baryons in this class arise from different isospin values.</p>
-</section>
-<section id="one-heavy-flavor-type" class="level3">
-<h3 class="anchored" data-anchor-id="one-heavy-flavor-type">One heavy-flavor type</h3>
-<p>Baryons with only <code>f</code> after the underscore contain one heavy-flavor type. The physical heavy flavor can be:</p>
-<ul>
-<li>strange (<code>s</code>)</li>
-<li>charm (<code>c</code>)</li>
-<li>bottom (<code>b</code>)</li>
-</ul>
-<p>The baryons that follow this convention are:</p>
-<ul>
-<li><code>Lambda_f</code></li>
-<li><code>Sigma_f</code></li>
-<li><code>Xi_ff</code></li>
-<li><code>Omega_fff</code></li>
-</ul>
-</section>
-<section id="two-heavy-flavor-types" class="level3">
-<h3 class="anchored" data-anchor-id="two-heavy-flavor-types">Two heavy-flavor types</h3>
-<p>Baryons with <code>f</code> and <code>g</code> contain two distinct heavy flavors. These baryons are:</p>
-<ul>
-<li><code>Xi_fg</code></li>
-<li><code>XiPrime_fg</code></li>
-<li><code>Omega_ffg</code></li>
-<li><code>Omega_fgg</code></li>
-</ul>
-</section>
-<section id="three-heavy-flavor-types" class="level3">
-<h3 class="anchored" data-anchor-id="three-heavy-flavor-types">Three heavy-flavor types</h3>
-<p>Baryons with <code>f</code>, <code>g</code>, and <code>h</code> contain three distinct heavy flavors. These baryons are:</p>
-<ul>
-<li><code>Omega_fgh</code></li>
-<li><code>OmegaPrime_fgh</code></li>
-</ul>
-</section>
-</section>
-<section id="heavy-flavor-ordering-rule" class="level2">
-<h2 class="anchored" data-anchor-id="heavy-flavor-ordering-rule">Heavy-flavor ordering rule</h2>
-<p>The symbolic ordering is always:</p>
-<pre class="text"><code>f &lt; g &lt; h</code></pre>
-<p>This means the heavy flavors are always listed from lighter to heavier. For example, <code>sc</code> is allowed, but <code>cs</code> is not.</p>
-<p>The allowed physical assignments are:</p>
-<ul>
-<li>One heavy flavor: <code>s</code>, <code>c</code>, <code>b</code></li>
-<li>Two heavy flavors: <code>sc</code>, <code>sb</code>, <code>cb</code></li>
-<li>Three heavy flavors: <code>scb</code></li>
-</ul>
-</section>
-<section id="channel-naming-rules" class="level2">
-<h2 class="anchored" data-anchor-id="channel-naming-rules">Channel naming rules</h2>
-<p>Each channel name is built from:</p>
-<ul>
-<li>a heavy-flavor specification, when applicable</li>
-<li>a <code>J</code> value</li>
-<li>a parity value</li>
-</ul>
-<p>These parts are combined into the filename prefix used inside the analysis folders.</p>
-<section id="heavy-flavor-specification" class="level3">
-<h3 class="anchored" data-anchor-id="heavy-flavor-specification">Heavy-flavor specification</h3>
-<p>Light-only baryons have no heavy-flavor bracket.</p>
-<p>For heavy-flavor baryons, the bracketed prefixes are:</p>
-<ul>
-<li>One heavy flavor: <code>[s]_</code>, <code>[c]_</code>, <code>[b]_</code></li>
-<li>Two heavy flavors: <code>[sc]_</code>, <code>[sb]_</code>, <code>[cb]_</code></li>
-<li>Three heavy flavors: <code>[scb]_</code></li>
-</ul>
-</section>
-<section id="j-values" class="level3">
-<h3 class="anchored" data-anchor-id="j-values">J values</h3>
-<p>The allowed <code>J</code> values are:</p>
-<ul>
-<li><code>1/2</code>, written in filenames as <code>J12_</code></li>
-<li><code>3/2</code>, written in filenames as <code>J32_</code></li>
-</ul>
-</section>
-<section id="parity-values" class="level3">
-<h3 class="anchored" data-anchor-id="parity-values">Parity values</h3>
-<p>The allowed parity values are:</p>
-<ul>
-<li><code>Positive_</code></li>
-<li><code>Negative_</code></li>
-</ul>
-</section>
-</section>
-<section id="complete-channel-prefixes" class="level2">
-<h2 class="anchored" data-anchor-id="complete-channel-prefixes">Complete channel prefixes</h2>
-<p>Examples of complete channel prefixes are:</p>
-<ul>
-<li><code>J12_Positive_</code></li>
-<li><code>J32_Negative_</code></li>
-<li><code>[s]_J12_Positive_</code></li>
-<li><code>[c]_J12_Negative_</code></li>
-<li><code>[sc]_J32_Positive_</code></li>
-<li><code>[scb]_J32_Negative_</code></li>
-</ul>
-</section>
-<section id="analysis-file-locations" class="level2">
-<h2 class="anchored" data-anchor-id="analysis-file-locations">Analysis file locations</h2>
-<p>For a given baryon and valid channel prefix, the relevant files are:</p>
-<section id="partial-waves" class="level3">
-<h3 class="anchored" data-anchor-id="partial-waves">Partial waves</h3>
-<pre class="text"><code>baryons/&lt;BARYON&gt;/analysis_waves/&lt;PREFIX&gt;PartWavs_Analysis.txt</code></pre>
-<p>These files contain the partial-wave contributions for the four states.</p>
-</section>
-<section id="diquarks" class="level3">
-<h3 class="anchored" data-anchor-id="diquarks">Diquarks</h3>
-<pre class="text"><code>baryons/&lt;BARYON&gt;/analysis_diquarks/&lt;PREFIX&gt;DQ_Analysis.txt</code></pre>
-<p>These files contain the diquark contributions for the four states.</p>
-</section>
-</section>
-<section id="apmeb_summary.txt" class="level2">
-<h2 class="anchored" data-anchor-id="apmeb_summary.txt"><code>APMEB_Summary.txt</code></h2>
-<p><code>APMEB_Summary.txt</code> is located in the root directory and provides the calculated mass intervals.</p>
-<section id="structure" class="level3">
-<h3 class="anchored" data-anchor-id="structure">Structure</h3>
-<ul>
-<li>The first 2 lines are header metadata and can be ignored.</li>
-<li>The rest of the file is organized into repeated baryon blocks.</li>
-<li>Each baryon block begins after an empty line and a separator line.</li>
-<li>The baryon block header has the form:</li>
-</ul>
-<pre class="text"><code>=== Baryon: &lt;BARYON&gt; ===</code></pre>
-</section>
-<section id="channel-sub-blocks" class="level3">
-<h3 class="anchored" data-anchor-id="channel-sub-blocks">Channel sub-blocks</h3>
-<p>Inside each baryon block, there are repeated channel sub-blocks. Each channel sub-block corresponds to a channel prefix without the trailing underscore.</p>
-<p>Examples:</p>
-<ul>
-<li><code>J12_Positive</code></li>
-<li><code>[sc]_J32_Negative</code></li>
-</ul>
-<p>Each channel sub-block contains:</p>
-<pre class="text"><code>Channel: &lt;CHANNEL&gt;
-Grd : [min, max] MeV (Width: width MeV)
-1st : [min, max] MeV (Width: width MeV)
-2nd : [min, max] MeV (Width: width MeV)
-3rd : [min, max] MeV (Width: width MeV)</code></pre>
-<p>There is an empty line between channel sub-blocks.</p>
-</section>
-</section>
-<section id="partwavs_analysis.txt-files" class="level2">
-<h2 class="anchored" data-anchor-id="partwavs_analysis.txt-files"><code>PartWavs_Analysis.txt</code> files</h2>
-<p>These files contain partial-wave contributions.</p>
-<section id="structure-1" class="level3">
-<h3 class="anchored" data-anchor-id="structure-1">Structure</h3>
-<ul>
-<li>The first 4 lines can be ignored.</li>
-<li>Then come 4 state blocks:</li>
-<li><code>Grd</code></li>
-<li><code>1st</code></li>
-<li><code>2nd</code></li>
-<li><code>3rd</code></li>
-</ul>
-<p>Each state block begins with:</p>
-<pre class="text"><code>State: &lt;STATE&gt; (i=&lt;INDEX&gt;)</code></pre>
-<p>Each state block ends with a dashed separator line.</p>
-</section>
-<section id="components" class="level3">
-<h3 class="anchored" data-anchor-id="components">Components</h3>
-<p>Each state block contains the fixed partial-wave components:</p>
-<ul>
-<li><code>s-wave</code></li>
-<li><code>p-wave</code></li>
-<li><code>d-wave</code></li>
-<li><code>f-wave</code></li>
-</ul>
-<p>Each contribution line has the form:</p>
-<pre class="text"><code>&lt;component&gt; : &lt;value&gt; +/- &lt;error&gt; (&lt;method&gt;)</code></pre>
-<p>Then there is a final line:</p>
-<pre class="text"><code>SUM : &lt;value&gt;</code></pre>
-</section>
-<section id="interval-rule" class="level3">
-<h3 class="anchored" data-anchor-id="interval-rule">Interval rule</h3>
-<p>For the final project representation:</p>
-<ul>
-<li>minimum wave value = <code>value - error</code></li>
-<li>maximum wave value = <code>value + error</code></li>
-</ul>
-</section>
-</section>
-<section id="dq_analysis.txt-files" class="level2">
-<h2 class="anchored" data-anchor-id="dq_analysis.txt-files"><code>DQ_Analysis.txt</code> files</h2>
-<p>These files contain diquark contributions.</p>
-<section id="shared-structure" class="level3">
-<h3 class="anchored" data-anchor-id="shared-structure">Shared structure</h3>
-<p>The structure is the same as in <code>PartWavs_Analysis.txt</code>:</p>
-<ul>
-<li>the first 4 lines are ignored</li>
-<li>there are 4 state blocks</li>
-<li>each block begins with <code>State: &lt;STATE&gt; (i=&lt;INDEX&gt;)</code></li>
-<li>each block ends with a dashed separator line</li>
-<li>each contribution line has the form <code>&lt;component&gt; : &lt;value&gt; +/- &lt;error&gt; (&lt;method&gt;)</code></li>
-<li>each block ends with <code>SUM : &lt;value&gt;</code></li>
-</ul>
-</section>
-<section id="interval-rule-1" class="level3">
-<h3 class="anchored" data-anchor-id="interval-rule-1">Interval rule</h3>
-<p>For the final project representation:</p>
-<ul>
-<li>minimum diquark value = <code>value - error</code></li>
-<li>maximum diquark value = <code>value + error</code></li>
-</ul>
-</section>
-<section id="diquark-types-by-baryon" class="level3">
-<h3 class="anchored" data-anchor-id="diquark-types-by-baryon">Diquark types by baryon</h3>
-<section id="delta-nucleon" class="level4">
-<h4 class="anchored" data-anchor-id="delta-nucleon"><code>Delta</code>, <code>Nucleon</code></h4>
-<ul>
-<li><code>SC(nn)</code></li>
-<li><code>AV(nn)</code></li>
-</ul>
-</section>
-<section id="lambda_f-sigma_f" class="level4">
-<h4 class="anchored" data-anchor-id="lambda_f-sigma_f"><code>Lambda_f</code>, <code>Sigma_f</code></h4>
-<ul>
-<li><code>SC(nn)</code></li>
-<li><code>SC(nf)</code></li>
-<li><code>AV(nn)</code></li>
-<li><code>AV(nf)</code></li>
-</ul>
-</section>
-<section id="xi_ff" class="level4">
-<h4 class="anchored" data-anchor-id="xi_ff"><code>Xi_ff</code></h4>
-<ul>
-<li><code>SC(nf)</code></li>
-<li><code>SC(ff)</code></li>
-<li><code>AV(nf)</code></li>
-<li><code>AV(ff)</code></li>
-</ul>
-</section>
-<section id="omega_fff" class="level4">
-<h4 class="anchored" data-anchor-id="omega_fff"><code>Omega_fff</code></h4>
-<ul>
-<li><code>SC(ff)</code></li>
-<li><code>AV(ff)</code></li>
-</ul>
-</section>
-<section id="xi_fg-xiprime_fg" class="level4">
-<h4 class="anchored" data-anchor-id="xi_fg-xiprime_fg"><code>Xi_fg</code>, <code>XiPrime_fg</code></h4>
-<ul>
-<li><code>SC(nf)</code></li>
-<li><code>SC(ng)</code></li>
-<li><code>SC(fg)</code></li>
-<li><code>AV(nf)</code></li>
-<li><code>AV(ng)</code></li>
-<li><code>AV(fg)</code></li>
-</ul>
-</section>
-<section id="omega_ffg" class="level4">
-<h4 class="anchored" data-anchor-id="omega_ffg"><code>Omega_ffg</code></h4>
-<ul>
-<li><code>SC(ff)</code></li>
-<li><code>SC(fg)</code></li>
-<li><code>AV(ff)</code></li>
-<li><code>AV(fg)</code></li>
-</ul>
-</section>
-<section id="omega_fgg" class="level4">
-<h4 class="anchored" data-anchor-id="omega_fgg"><code>Omega_fgg</code></h4>
-<ul>
-<li><code>SC(fg)</code></li>
-<li><code>SC(gg)</code></li>
-<li><code>AV(fg)</code></li>
-<li><code>AV(gg)</code></li>
-</ul>
-</section>
-<section id="omega_fgh-omegaprime_fgh" class="level4">
-<h4 class="anchored" data-anchor-id="omega_fgh-omegaprime_fgh"><code>Omega_fgh</code>, <code>OmegaPrime_fgh</code></h4>
-<ul>
-<li><code>SC(fg)</code></li>
-<li><code>SC(fh)</code></li>
-<li><code>SC(gh)</code></li>
-<li><code>AV(fg)</code></li>
-<li><code>AV(fh)</code></li>
-<li><code>AV(gh)</code></li>
-</ul>
-</section>
-</section>
-</section>
-<section id="summary-of-how-the-program-uses-the-inputs" class="level2">
-<h2 class="anchored" data-anchor-id="summary-of-how-the-program-uses-the-inputs">Summary of how the program uses the inputs</h2>
-<p>For each expected combination of baryon, heavy-flavor assignment, <code>J</code>, and parity:</p>
-<ul>
-<li><code>APMEB_Summary.txt</code> provides the mass intervals for <code>Grd</code>, <code>1st</code>, <code>2nd</code>, and <code>3rd</code></li>
-<li>the matching <code>PartWavs_Analysis.txt</code> file provides the partial-wave data for the same four states</li>
-<li>the matching <code>DQ_Analysis.txt</code> file provides the diquark data for the same four states</li>
-</ul>
-<p>If any expected channel or quantity is missing, the final output will use:</p>
-<pre class="text"><code>[NaN, NaN]</code></pre>
 
 
-</section>
 </section>
 
 </main> <!-- /main -->

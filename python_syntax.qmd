@@ -1,0 +1,568 @@
+---
+title: "Python Code Written So Far"
+format: html
+---
+
+# Purpose
+
+This page explains a bit of the python code, namely the first three classes of the first layer of the architecture plan.
+
+At this stage, the code does not yet parse files or assemble the final result tree. Instead, it defines the first three foundational classes of the architecture:
+
+- `Interval`
+- `FlavorAssignment`
+- `ChannelKey`
+
+These classes are small, but they establish the vocabulary and structure that the rest of the program will use.
+
+## Imported modules
+
+The code begins with:
+
+```python
+from __future__ import annotations
+
+from dataclasses import dataclass
+from math import isnan
+from typing import Optional
+```
+
+### What these imports do
+
+#### `from __future__ import annotations`
+
+This changes how Python handles type hints. It allows the code to use return annotations like `"Interval"` safely inside the class definition, without requiring the class to be fully defined at the moment the annotation is parsed.
+
+This is useful for methods such as:
+
+```python
+@classmethod
+def nan(cls) -> "Interval":
+    ...
+
+@classmethod
+def from_value_error(cls, value: float, error: float) -> "Interval":
+    ...
+```
+
+#### `from dataclasses import dataclass`
+
+This imports the `@dataclass` decorator.
+
+A dataclass is a convenient way to define classes whose main purpose is to store structured data. It automatically provides an initializer and other useful methods.
+
+This is appropriate here because these first classes are mostly data containers with a small amount of related behavior.
+
+#### `from math import isnan`
+
+This imports the `isnan` function, which is used to check whether a floating-point value is `NaN`.
+
+#### `from typing import Optional`
+
+This imports `Optional`, which is used in type hints such as:
+
+```python
+f: Optional[str] = None
+```
+
+This means that the attribute may be either a string or `None`.
+
+## The `Interval` class
+
+The first class is:
+
+```python
+@dataclass(frozen=True)
+class Interval:
+    min_value: float
+    max_value: float
+
+    @classmethod
+    def nan(cls) -> "Interval":
+        return cls(float("nan"), float("nan"))
+
+    @classmethod
+    def from_value_error(cls, value: float, error: float) -> "Interval":
+        return cls(value - error, value + error)
+
+    def is_nan(self) -> bool:
+        return isnan(self.min_value) and isnan(self.max_value)
+
+    def format(self, decimals: int = 4) -> str:
+        if self.is_nan():
+            return "[NaN, NaN]"
+        return f"[{self.min_value:.{decimals}f}, {self.max_value:.{decimals}f}]"
+```
+
+### Purpose of `Interval`
+
+This class represents a numeric interval of the form:
+
+```text
+[min_value, max_value]
+```
+
+In the project, this same structure is needed for:
+
+- calculated mass intervals
+- partial-wave intervals
+- diquark intervals
+- missing values, represented as `[NaN, NaN]`
+
+The design idea is that all interval-like quantities should use the same object instead of being handled separately.
+
+### `@dataclass(frozen=True)`
+
+The class is declared as a frozen dataclass:
+
+```python
+@dataclass(frozen=True)
+```
+
+This has two consequences:
+
+- the class automatically gets an initializer, so `Interval(min_value, max_value)` works directly
+- instances are immutable, meaning their fields cannot be changed after creation
+
+Immutability is useful here because an interval is meant to be a fixed mathematical object once created.
+
+### Data fields
+
+The class stores two fields:
+
+```python
+min_value: float
+max_value: float
+```
+
+These are the lower and upper bounds of the interval.
+
+### `nan()` class method
+
+The first helper is:
+
+```python
+@classmethod
+def nan(cls) -> "Interval":
+    return cls(float("nan"), float("nan"))
+```
+
+This creates the standard missing interval:
+
+```text
+[NaN, NaN]
+```
+
+Instead of repeatedly writing:
+
+```python
+Interval(float("nan"), float("nan"))
+```
+
+the code can simply call:
+
+```python
+Interval.nan()
+```
+
+### `from_value_error()` class method
+
+The second helper is:
+
+```python
+@classmethod
+def from_value_error(cls, value: float, error: float) -> "Interval":
+    return cls(value - error, value + error)
+```
+
+This converts a quantity written as:
+
+```text
+value +/- error
+```
+
+into an interval:
+
+```text
+[value - error, value + error]
+```
+
+This is exactly the rule needed for the wave and diquark analysis files.
+
+For example, if a contribution is:
+
+```text
+0.4237 +/- 0.0062
+```
+
+then the interval becomes:
+
+```text
+[0.4175, 0.4299]
+```
+
+This method centralizes that conversion rule in one place.
+
+### `is_nan()` method
+
+The method
+
+```python
+def is_nan(self) -> bool:
+    return isnan(self.min_value) and isnan(self.max_value)
+```
+
+checks whether the interval is the missing-value interval.
+
+This is necessary because later, when formatting output, the code needs to distinguish between an ordinary numeric interval and the special case `[NaN, NaN]`.
+
+### `format()` method
+
+The final method is:
+
+```python
+def format(self, decimals: int = 4) -> str:
+    if self.is_nan():
+        return "[NaN, NaN]"
+    return f"[{self.min_value:.{decimals}f}, {self.max_value:.{decimals}f}]"
+```
+
+This converts the interval into the string form required for output.
+
+If the interval is missing, it returns:
+
+```text
+[NaN, NaN]
+```
+
+Otherwise it formats both endpoints with a chosen number of decimal places. The default is four decimal places, which is especially suitable for wave and diquark contributions.
+
+## The `FlavorAssignment` class
+
+The second class is:
+
+```python
+@dataclass(frozen=True)
+class FlavorAssignment:
+    f: Optional[str] = None
+    g: Optional[str] = None
+    h: Optional[str] = None
+
+    def code(self) -> Optional[str]:
+        parts = [x for x in (self.f, self.g, self.h) if x is not None]
+        return "".join(parts) if parts else None
+
+    def is_light_only(self) -> bool:
+        return self.code() is None
+
+    def mapping(self) -> dict[str, str]:
+        result = {}
+        if self.f is not None:
+            result["f"] = self.f
+        if self.g is not None:
+            result["g"] = self.g
+        if self.h is not None:
+            result["h"] = self.h
+        return result
+
+    def substitute_symbols(self, text: str) -> str:
+        result = text
+        for symbol, flavor in self.mapping().items():
+            result = result.replace(symbol, flavor)
+        return result
+```
+
+### Purpose of `FlavorAssignment`
+
+This class represents the heavy-flavor specification attached to a baryon channel.
+
+Examples include:
+
+- no heavy flavor at all
+- one heavy flavor, such as `f = s`
+- two heavy flavors, such as `f = s, g = c`
+- three heavy flavors, such as `f = s, g = c, h = b`
+
+The class stores this information in structured form instead of using raw strings like `"sc"` everywhere.
+
+### Data fields
+
+The class stores up to three heavy-flavor placeholders:
+
+```python
+f: Optional[str] = None
+g: Optional[str] = None
+h: Optional[str] = None
+```
+
+Each of these may contain a physical flavor such as:
+
+- `"s"`
+- `"c"`
+- `"b"`
+
+or may be `None` if that placeholder is not used.
+
+Examples:
+
+- light-only baryon: `f=None, g=None, h=None`
+- one-heavy-flavor case: `f="s", g=None, h=None`
+- two-heavy-flavor case: `f="s", g="c", h=None`
+- three-heavy-flavor case: `f="s", g="c", h="b"`
+
+### `code()` method
+
+The method
+
+```python
+def code(self) -> Optional[str]:
+    parts = [x for x in (self.f, self.g, self.h) if x is not None]
+    return "".join(parts) if parts else None
+```
+
+builds the compact code corresponding to the assignment.
+
+Examples:
+
+- `None, None, None -> None`
+- `f="s" -> "s"`
+- `f="s", g="c" -> "sc"`
+- `f="s", g="c", h="b" -> "scb"`
+
+This compact form is useful because it matches the channel naming used in:
+
+- filenames
+- `APMEB_Summary.txt`
+- human-readable labels later on
+
+### `is_light_only()` method
+
+The method
+
+```python
+def is_light_only(self) -> bool:
+    return self.code() is None
+```
+
+checks whether the baryon has no heavy-flavor assignment.
+
+This is useful because the output structure differs between:
+
+- light-only baryons such as `Delta` and `Nucleon`
+- baryons with heavy-flavor subsections
+
+### `mapping()` method
+
+The method
+
+```python
+def mapping(self) -> dict[str, str]:
+    result = {}
+    if self.f is not None:
+        result["f"] = self.f
+    if self.g is not None:
+        result["g"] = self.g
+    if self.h is not None:
+        result["h"] = self.h
+    return result
+```
+
+builds a dictionary mapping symbolic placeholders to physical flavors.
+
+Examples:
+
+- `f="s"` gives `{"f": "s"}`
+- `f="s", g="c"` gives `{"f": "s", "g": "c"}`
+- `f="s", g="c", h="b"` gives `{"f": "s", "g": "c", "h": "b"}`
+
+This is a useful intermediate representation for later substitutions.
+
+### `substitute_symbols()` method
+
+The final method is:
+
+```python
+def substitute_symbols(self, text: str) -> str:
+    result = text
+    for symbol, flavor in self.mapping().items():
+        result = result.replace(symbol, flavor)
+    return result
+```
+
+This replaces symbolic flavor labels with physical ones.
+
+For example:
+
+- `SC(nf)` becomes `SC(ns)` when `f = s`
+- `AV(fg)` becomes `AV(sc)` when `f = s` and `g = c`
+
+This method will later be important when writing the final output file, because the diquark labels should appear in their physical form.
+
+## The `ChannelKey` class
+
+The third class is:
+
+```python
+@dataclass(frozen=True)
+class ChannelKey:
+    flavor_assignment: FlavorAssignment
+    J: str
+    parity: str
+
+    def j_code(self) -> str:
+        if self.J == "1/2":
+            return "J12"
+        if self.J == "3/2":
+            return "J32"
+        raise ValueError(f"Unsupported J value: {self.J}")
+
+    def prefix(self) -> str:
+        flavor_code = self.flavor_assignment.code()
+
+        if flavor_code is None:
+            return f"{self.j_code()}_{self.parity}_"
+
+        return f"[{flavor_code}]_{self.j_code()}_{self.parity}_"
+
+    def summary_channel_name(self) -> str:
+        return self.prefix().rstrip("_")
+
+    def display_label(self) -> str:
+        return f"J = {self.J}, Parity = {self.parity}"
+```
+
+### Purpose of `ChannelKey`
+
+This class represents the identity of a baryon channel.
+
+A channel is determined by:
+
+- heavy-flavor assignment
+- total angular momentum `J`
+- parity
+
+Examples of channels include:
+
+- `J = 1/2`, positive parity, light-only
+- `[s]_J32_Negative`
+- `[sc]_J12_Positive`
+
+This object centralizes the logic for converting that identity into the various string forms used in the project.
+
+### Data fields
+
+The class stores:
+
+```python
+flavor_assignment: FlavorAssignment
+J: str
+parity: str
+```
+
+So a `ChannelKey` is a structured combination of:
+
+- one `FlavorAssignment`
+- one `J` value
+- one parity value
+
+### `j_code()` method
+
+The method
+
+```python
+def j_code(self) -> str:
+    if self.J == "1/2":
+        return "J12"
+    if self.J == "3/2":
+        return "J32"
+    raise ValueError(f"Unsupported J value: {self.J}")
+```
+
+converts the human-readable `J` value into the file-naming code.
+
+Specifically:
+
+- `"1/2" -> "J12"`
+- `"3/2" -> "J32"`
+
+If another value is given, the method raises an error. That is useful because it enforces the current project assumptions explicitly.
+
+### `prefix()` method
+
+The method
+
+```python
+def prefix(self) -> str:
+    flavor_code = self.flavor_assignment.code()
+
+    if flavor_code is None:
+        return f"{self.j_code()}_{self.parity}_"
+
+    return f"[{flavor_code}]_{self.j_code()}_{self.parity}_"
+```
+
+builds the filename prefix used by the wave and diquark files.
+
+Examples:
+
+- light-only: `J12_Positive_`
+- one heavy flavor: `[s]_J32_Negative_`
+- two heavy flavors: `[sc]_J12_Positive_`
+
+This is one of the most important naming utilities in the code, because it gives the exact prefix needed to locate input files.
+
+### `summary_channel_name()` method
+
+The method
+
+```python
+def summary_channel_name(self) -> str:
+    return self.prefix().rstrip("_")
+```
+
+builds the channel name as it appears in `APMEB_Summary.txt`.
+
+The summary file uses the same naming convention as the analysis files, except without the trailing underscore.
+
+Examples:
+
+- `J12_Positive`
+- `[s]_J32_Negative`
+- `[sc]_J12_Positive`
+
+This method avoids duplicating that small but important naming rule elsewhere.
+
+### `display_label()` method
+
+The method
+
+```python
+def display_label(self) -> str:
+    return f"J = {self.J}, Parity = {self.parity}"
+```
+
+builds the human-readable label intended for `All_Results.txt`.
+
+Example:
+
+```text
+J = 1/2, Parity = Positive
+```
+
+This is different from the filename form and the summary-file form, so it is useful to keep all three naming styles separated.
+
+## Why these three classes come first
+
+These classes were written first because they provide the minimal shared vocabulary needed by the rest of the program.
+
+- `Interval` defines how numeric intervals are represented
+- `FlavorAssignment` defines how heavy-flavor structure is represented
+- `ChannelKey` defines how a channel is identified and named
+
+All later parts of the program will build on these concepts.
+
+For example:
+
+- parsers will create `Interval` objects
+- metadata classes will create valid `FlavorAssignment` objects
+- channels throughout the program will be indexed by `ChannelKey`
