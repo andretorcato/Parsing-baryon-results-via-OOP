@@ -1,6 +1,6 @@
 project:
   type: website # Tells quarto to build a website
-  output-dir: docs # Tells it to place the rendered site in docs/
+  output-dir: _site # Tells it to place the rendered site in _site/
 
 website:
   title: "OOP code for parsing baryon results"
