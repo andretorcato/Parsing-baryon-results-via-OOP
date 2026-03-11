@@ -3,17 +3,17 @@ title: "Input Data Sources"
 format: html
 ---
 
-# Input Data Sources
+# Purpose
 
-This page explains the input data sources.
+This page documents the input files and naming conventions used by the parsing project. The goal is to explain where the raw data lives, how the files are named, and how the parser matches the different inputs for each baryon channel.
 
-## Directory of interest
+## Root directory
 
-Our directory of interest contains:
+The parent directory contains:
 
-- The python code that will parse the baryon results
-- A .txt file called `APMEB_Summary.txt` which contains the baryon mass spectrum results
-- The `baryons/` folder, which contains partial waves and diquark distribution results for all baryons
+- the Python parsing code
+- `APMEB_Summary.txt`
+- the `baryons/` folder
 
 ## Baryon directories
 
@@ -32,34 +32,35 @@ Inside `baryons/`, there are 12 baryon-category folders:
 - `Xi_fg`
 - `XiPrime_fg`
 
-This was an arbitrary separation for organizing all baryons. By specifying heavy flavors through `f`, `g` and `h`, we have identified baryons as having:
+This organization uses the symbols `f`, `g`, and `h` to represent heavy flavors. In practice, the baryons fall into the following groups:
 
-- Three equal quark flavors: `Nucleon`, `Delta` and `Omega_fff`
-- Two equal quark flavors, plus one heavier flavor: `Lambda_f`, `Sigma_f` and `Omega_ffg`
-- Two equal quark flavors, plus one lighter flavor: `Xi_ff` and `Omega_fgg`
-- Three different quark flavors: `Xi_fg`, `XiPrime_fg`, `Omega_fgh` and `OmegaPrime_fgh` 
+- Three equal quark flavors: `Nucleon`, `Delta`, `Omega_fff`
+- Two equal quark flavors plus one heavier flavor: `Lambda_f`, `Sigma_f`, `Omega_ffg`
+- Two equal quark flavors plus one lighter flavor: `Xi_ff`, `Omega_fgg`
+- Three different quark flavors: `Xi_fg`, `XiPrime_fg`, `Omega_fgh`, `OmegaPrime_fgh`
 
 ## Baryon naming conventions
 
 ### Light-only baryons
 
-Baryons without an underscore contain only the light flavor `n`. This is both the up and down flavors, since we cannot distinguish between the two using only purely gluon driven interactions. The baryons which obey this convention are:
+Baryons without an underscore contain only the light flavor `n`. Here `n` represents the light up/down sector, since the calculation does not distinguish those flavors through purely gluonic interactions.
+
+The baryons in this class are:
 
 - `Delta`
 - `Nucleon`
 
-Different baryons at this stage come about due to different isospin values.
+Different baryons in this class arise from different isospin values.
 
 ### One heavy-flavor type
 
-Baryons with only `f` after the underscore contain one heavy-flavor type.
-The physical heavy flavor can be:
+Baryons with only `f` after the underscore contain one heavy-flavor type. The physical heavy flavor can be:
 
-- Strange (`s`)
-- Charm (`c`)
-- Bottom (`b`)
+- strange (`s`)
+- charm (`c`)
+- bottom (`b`)
 
-The baryons which obey this convention are:
+The baryons that follow this convention are:
 
 - `Lambda_f`
 - `Sigma_f`
@@ -68,7 +69,7 @@ The baryons which obey this convention are:
 
 ### Two heavy-flavor types
 
-Baryons with `f` and `g` contain two distinct heavy flavors. These are:
+Baryons with `f` and `g` contain two distinct heavy flavors. These baryons are:
 
 - `Xi_fg`
 - `XiPrime_fg`
@@ -77,17 +78,267 @@ Baryons with `f` and `g` contain two distinct heavy flavors. These are:
 
 ### Three heavy-flavor types
 
-Baryons with `f`, `g`, and `h` contain three distinct heavy flavors. These are:
+Baryons with `f`, `g`, and `h` contain three distinct heavy flavors. These baryons are:
 
 - `Omega_fgh`
 - `OmegaPrime_fgh`
 
 ## Heavy-flavor ordering rule
 
-The allowed symbolic ordering is `f < g < h`. This means that, for example, if `f = s`, then `g` cannot be a strange flavor and is heavier than `s` too. This also means that, for example, when considering two heavy flavors, `fg`, having `sc` is okay but having `cs` is not an allowed pairing.
+The symbolic ordering is always:
 
-In the end, the allowed assignements are:
+```text
+f < g < h
+```
 
-- `s`, `c` and `b` for one heavy flavor assignements
-- `sc`, `sb` and `cb` for two heavy flavor assignements
-- `scb` for three heavy flavor assignements
+This means the heavy flavors are always listed from lighter to heavier. For example, `sc` is allowed, but `cs` is not.
+
+The allowed physical assignments are:
+
+- One heavy flavor: `s`, `c`, `b`
+- Two heavy flavors: `sc`, `sb`, `cb`
+- Three heavy flavors: `scb`
+
+## Channel naming rules
+
+Each channel name is built from:
+
+- a heavy-flavor specification, when applicable
+- a `J` value
+- a parity value
+
+These parts are combined into the filename prefix used inside the analysis folders.
+
+### Heavy-flavor specification
+
+Light-only baryons have no heavy-flavor bracket.
+
+For heavy-flavor baryons, the bracketed prefixes are:
+
+- One heavy flavor: `[s]_`, `[c]_`, `[b]_`
+- Two heavy flavors: `[sc]_`, `[sb]_`, `[cb]_`
+- Three heavy flavors: `[scb]_`
+
+### J values
+
+The allowed `J` values are:
+
+- `1/2`, written in filenames as `J12_`
+- `3/2`, written in filenames as `J32_`
+
+### Parity values
+
+The allowed parity values are:
+
+- `Positive_`
+- `Negative_`
+
+## Complete channel prefixes
+
+Examples of complete channel prefixes are:
+
+- `J12_Positive_`
+- `J32_Negative_`
+- `[s]_J12_Positive_`
+- `[c]_J12_Negative_`
+- `[sc]_J32_Positive_`
+- `[scb]_J32_Negative_`
+
+## Analysis file locations
+
+For a given baryon and valid channel prefix, the relevant files are:
+
+### Partial waves
+
+```text
+baryons/<BARYON>/analysis_waves/<PREFIX>PartWavs_Analysis.txt
+```
+
+These files contain the partial-wave contributions for the four states.
+
+### Diquarks
+
+```text
+baryons/<BARYON>/analysis_diquarks/<PREFIX>DQ_Analysis.txt
+```
+
+These files contain the diquark contributions for the four states.
+
+## `APMEB_Summary.txt`
+
+`APMEB_Summary.txt` is located in the root directory and provides the calculated mass intervals.
+
+### Structure
+
+- The first 2 lines are header metadata and can be ignored.
+- The rest of the file is organized into repeated baryon blocks.
+- Each baryon block begins after an empty line and a separator line.
+- The baryon block header has the form:
+
+```text
+=== Baryon: <BARYON> ===
+```
+
+### Channel sub-blocks
+
+Inside each baryon block, there are repeated channel sub-blocks. Each channel sub-block corresponds to a channel prefix without the trailing underscore.
+
+Examples:
+
+- `J12_Positive`
+- `[sc]_J32_Negative`
+
+Each channel sub-block contains:
+
+```text
+Channel: <CHANNEL>
+Grd : [min, max] MeV (Width: width MeV)
+1st : [min, max] MeV (Width: width MeV)
+2nd : [min, max] MeV (Width: width MeV)
+3rd : [min, max] MeV (Width: width MeV)
+```
+
+There is an empty line between channel sub-blocks.
+
+## `PartWavs_Analysis.txt` files
+
+These files contain partial-wave contributions.
+
+### Structure
+
+- The first 4 lines can be ignored.
+- Then come 4 state blocks:
+- `Grd`
+- `1st`
+- `2nd`
+- `3rd`
+
+Each state block begins with:
+
+```text
+State: <STATE> (i=<INDEX>)
+```
+
+Each state block ends with a dashed separator line.
+
+### Components
+
+Each state block contains the fixed partial-wave components:
+
+- `s-wave`
+- `p-wave`
+- `d-wave`
+- `f-wave`
+
+Each contribution line has the form:
+
+```text
+<component> : <value> +/- <error> (<method>)
+```
+
+Then there is a final line:
+
+```text
+SUM : <value>
+```
+
+### Interval rule
+
+For the final project representation:
+
+- minimum wave value = `value - error`
+- maximum wave value = `value + error`
+
+## `DQ_Analysis.txt` files
+
+These files contain diquark contributions.
+
+### Shared structure
+
+The structure is the same as in `PartWavs_Analysis.txt`:
+
+- the first 4 lines are ignored
+- there are 4 state blocks
+- each block begins with `State: <STATE> (i=<INDEX>)`
+- each block ends with a dashed separator line
+- each contribution line has the form `<component> : <value> +/- <error> (<method>)`
+- each block ends with `SUM : <value>`
+
+### Interval rule
+
+For the final project representation:
+
+- minimum diquark value = `value - error`
+- maximum diquark value = `value + error`
+
+### Diquark types by baryon
+
+#### `Delta`, `Nucleon`
+
+- `SC(nn)`
+- `AV(nn)`
+
+#### `Lambda_f`, `Sigma_f`
+
+- `SC(nn)`
+- `SC(nf)`
+- `AV(nn)`
+- `AV(nf)`
+
+#### `Xi_ff`
+
+- `SC(nf)`
+- `SC(ff)`
+- `AV(nf)`
+- `AV(ff)`
+
+#### `Omega_fff`
+
+- `SC(ff)`
+- `AV(ff)`
+
+#### `Xi_fg`, `XiPrime_fg`
+
+- `SC(nf)`
+- `SC(ng)`
+- `SC(fg)`
+- `AV(nf)`
+- `AV(ng)`
+- `AV(fg)`
+
+#### `Omega_ffg`
+
+- `SC(ff)`
+- `SC(fg)`
+- `AV(ff)`
+- `AV(fg)`
+
+#### `Omega_fgg`
+
+- `SC(fg)`
+- `SC(gg)`
+- `AV(fg)`
+- `AV(gg)`
+
+#### `Omega_fgh`, `OmegaPrime_fgh`
+
+- `SC(fg)`
+- `SC(fh)`
+- `SC(gh)`
+- `AV(fg)`
+- `AV(fh)`
+- `AV(gh)`
+
+## Summary of how the program uses the inputs
+
+For each expected combination of baryon, heavy-flavor assignment, `J`, and parity:
+
+- `APMEB_Summary.txt` provides the mass intervals for `Grd`, `1st`, `2nd`, and `3rd`
+- the matching `PartWavs_Analysis.txt` file provides the partial-wave data for the same four states
+- the matching `DQ_Analysis.txt` file provides the diquark data for the same four states
+
+If any expected channel or quantity is missing, the final output will use:
+
+```text
+[NaN, NaN]
+```

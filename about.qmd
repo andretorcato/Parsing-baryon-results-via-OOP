@@ -2,7 +2,7 @@
 title: "About"
 ---
 
-# About this site
+# Purpose
 
 This site is built with Quarto and deployed with GitHub pages. This was a learning oportunity for:
 
