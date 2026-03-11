@@ -1,0 +1,299 @@
+---
+title: "Output File Structure"
+format: html
+---
+
+# Purpose
+
+This page describes the structure of the final output file produced by the project:
+
+```text
+All_Results.txt
+```
+
+The goal of this file is to provide a complete normalized summary of all baryon results, including:
+
+- calculated mass intervals
+- placeholders for PDG and LatticeQCD intervals
+- partial-wave contribution intervals
+- diquark contribution intervals
+
+If a quantity is missing from the input data, the interval
+
+```text
+[NaN, NaN]
+```
+
+is written.
+
+PDG and LatticeQCD intervals are currently placeholders and are written as:
+
+```text
+WIP
+```
+
+## Global organization
+
+The file is organized hierarchically:
+
+```text
+Baryon
+  Heavy flavor assignment (if applicable)
+    Channel (J, parity)
+      State
+        Mass intervals
+        Wave intervals
+        Diquark intervals
+```
+
+## Baryon blocks
+
+The top-level unit of the file is the baryon block.
+
+Each baryon block begins with:
+
+```text
+Baryon: <BARYON>
+```
+
+Examples:
+
+- `Baryon: Nucleon`
+- `Baryon: Delta`
+- `Baryon: Sigma_f`
+
+Each baryon block ends with a separator:
+
+```text
+=============================================================================
+```
+
+## Light-only baryons
+
+For baryons with only light flavors (`n`), the relevant cases are:
+
+- `Delta`
+- `Nucleon`
+
+These baryon blocks directly contain the channel sections.
+
+Example structure:
+
+```text
+Baryon: Nucleon
+  J = 1/2, Parity = Positive
+    State = Grd (Ground)
+    Calculated mass interval = [MIN, MAX]
+    PDG mass interval = WIP
+    LatticeQCD mass interval = WIP
+    Partial waves distributions:
+      s-wave interval = [MIN, MAX]
+      p-wave interval = [MIN, MAX]
+      d-wave interval = [MIN, MAX]
+      f-wave interval = [MIN, MAX]
+    Diquark distributions:
+      SC(nn) interval = [MIN, MAX]
+      AV(nn) interval = [MIN, MAX]
+    -----------------------------------------------------------------------------
+```
+
+## Heavy-flavor baryons
+
+Baryons containing heavy flavors include an additional subsection:
+
+```text
+Heavy flavor specification: ...
+```
+
+Examples:
+
+- `Heavy flavor specification: f = s (Forming nns)`
+- `Heavy flavor specification: f = c (Forming nnc)`
+- `Heavy flavor specification: f = s, g = c (Forming nsc)`
+- `Heavy flavor specification: f = s, g = c, h = b (Forming scb)`
+
+This subsection groups the channel results for that specific flavor assignment.
+
+Example structure:
+
+```text
+Baryon: Sigma_f
+  Heavy flavor specification: f = s (Forming nns)
+    J = 1/2, Parity = Positive
+      ...
+```
+
+## Channel sections
+
+Inside each heavy-flavor subsection, or directly inside the baryon block for light baryons, the file contains four channel sections.
+
+The allowed channels are:
+
+- `J = 1/2, Parity = Positive`
+- `J = 1/2, Parity = Negative`
+- `J = 3/2, Parity = Positive`
+- `J = 3/2, Parity = Negative`
+
+Example:
+
+```text
+J = 1/2, Parity = Positive
+```
+
+Each channel contains four state sections.
+
+## State sections
+
+Each channel contains the four states:
+
+- `Grd`
+- `1st`
+- `2nd`
+- `3rd`
+
+These labels correspond to:
+
+| Label | Meaning |
+|---|---|
+| `Grd` | Ground state |
+| `1st` | First excited state |
+| `2nd` | Second excited state |
+| `3rd` | Third excited state |
+
+Example state header:
+
+```text
+State = Grd (Ground)
+```
+
+## Mass interval lines
+
+Each state begins with the mass information:
+
+```text
+Calculated mass interval = [MIN, MAX]
+PDG mass interval = WIP
+LatticeQCD mass interval = WIP
+```
+
+Example:
+
+```text
+Calculated mass interval = [938.0, 940.0]
+PDG mass interval = WIP
+LatticeQCD mass interval = WIP
+```
+
+## Partial-wave distributions
+
+The next section lists the partial-wave contributions:
+
+```text
+Partial waves distributions:
+```
+
+There are always four components:
+
+- `s-wave interval = [MIN, MAX]`
+- `p-wave interval = [MIN, MAX]`
+- `d-wave interval = [MIN, MAX]`
+- `f-wave interval = [MIN, MAX]`
+
+These intervals are derived from input values of the form
+
+```text
+value +/- error
+```
+
+using:
+
+- `min = value - error`
+- `max = value + error`
+
+## Diquark distributions
+
+The diquark section follows:
+
+```text
+Diquark distributions:
+```
+
+The number and type of diquark components depend on the baryon.
+
+Example:
+
+- `SC(nn) interval = [MIN, MAX]`
+- `AV(nn) interval = [MIN, MAX]`
+
+For heavy-flavor baryons, the symbolic labels are replaced using the physical flavors.
+
+Example substitutions:
+
+- `SC(nf) -> SC(ns)` when `f = s`
+- `AV(fg) -> AV(sc)` when `f = s` and `g = c`
+
+## State separator
+
+Each state block ends with:
+
+```text
+-----------------------------------------------------------------------------
+```
+
+This separator appears after the diquark section.
+
+## Ordering rules
+
+The file follows fixed ordering rules.
+
+### Baryon order
+
+- `Delta`
+- `Lambda_f`
+- `Nucleon`
+- `Omega_fff`
+- `Omega_ffg`
+- `Omega_fgg`
+- `Omega_fgh`
+- `OmegaPrime_fgh`
+- `Sigma_f`
+- `Xi_ff`
+- `Xi_fg`
+- `XiPrime_fg`
+
+### Channel order
+
+- `J = 1/2, Positive`
+- `J = 1/2, Negative`
+- `J = 3/2, Positive`
+- `J = 3/2, Negative`
+
+### State order
+
+- `Grd`
+- `1st`
+- `2nd`
+- `3rd`
+
+### Partial-wave order
+
+- `s-wave`
+- `p-wave`
+- `d-wave`
+- `f-wave`
+
+## Missing data handling
+
+If a quantity cannot be found in the input files, the program writes:
+
+```text
+[NaN, NaN]
+```
+
+Example:
+
+```text
+s-wave interval = [NaN, NaN]
+```
+
+This ensures the output file maintains a complete and consistent structure even when some channels have not yet been computed.

@@ -1,0 +1,225 @@
+---
+title: "Architecture Plan"
+format: html
+---
+
+# Architecture Plan
+
+This page records the current software architecture plan for the `all_results.py` project.
+
+## Goal
+
+The project aims to build a Python program that reads:
+
+- `APMEB_Summary.txt`
+- `PartWavs_Analysis.txt`
+- `DQ_Analysis.txt`
+
+from the baryon folder hierarchy and produces a normalized `All_Results.txt` file containing:
+
+- calculated mass intervals
+- partial-wave intervals
+- diquark intervals
+
+for all expected baryons, heavy-flavor assignments, `J` values, parities, and states, using `[NaN, NaN]` where data is missing.
+
+## Guiding design principle
+
+The code is organized around the normalized scientific object we want to produce, not around the raw input files. Parsing, data modeling, orchestration, and text output are separated into distinct layers.
+
+# Architecture layers
+
+## 1. Domain model
+
+These classes represent the normalized in-memory scientific data independently of how it was read from disk.
+
+### `Interval`
+
+Purpose:
+
+- represent any numeric interval used in the project
+- masses, partial waves, diquarks, and missing values all use the same object
+
+What it solves:
+
+- gives the project a single reusable interval representation
+- avoids separate handling for masses, waves, and diquarks
+
+### `FlavorAssignment`
+
+Purpose:
+
+- represent the heavy-flavor assignment associated with a baryon channel in a structured way
+
+What it solves:
+
+- centralizes heavy-flavor logic
+- avoids manipulating raw flavor strings throughout the code
+
+### `ChannelKey`
+
+Purpose:
+
+- represent the identity of a baryon channel through heavy-flavor assignment, `J`, and parity
+
+What it solves:
+
+- gives the program one immutable channel identifier
+- centralizes naming conventions for files, summary keys, and output labels
+
+### `StateResult`
+
+Purpose:
+
+- represent all output information associated with one state (`Grd`, `1st`, `2nd`, `3rd`) of one specific channel
+
+What it will solve:
+
+- collect all state-level data into one object so the writer can emit the final text format directly from normalized data
+
+### `ChannelResult`
+
+Purpose:
+
+- represent the four state results belonging to one specific channel
+
+What it will solve:
+
+- group the four state results under a single channel identity
+
+### `BaryonResult`
+
+Purpose:
+
+- represent all channels belonging to one baryon category
+
+What it will solve:
+
+- provide a baryon-level container matching the final baryon-block structure in `All_Results.txt`
+
+### `AllResults`
+
+Purpose:
+
+- represent the complete normalized result set across the whole project
+
+What it will solve:
+
+- act as the top-level object passed to the writer to generate `All_Results.txt`
+
+## 2. Project metadata
+
+These classes encode the scientific and structural rules of the project independently of parsed data.
+
+### `BaryonSpec`
+
+Purpose:
+
+- describe one baryon category, including heavy-flavor pattern, composition pattern, and diquark types
+
+What it will solve:
+
+- prevents baryon-specific rules from being scattered through parsers, assembler, and writer
+
+### `ProjectCatalog`
+
+Purpose:
+
+- hold the complete registry of baryon specifications and the global ordering rules
+
+What it will solve:
+
+- provides a single authoritative source for what should exist, including channels currently missing in the data
+
+## 3. Parsers
+
+These read raw text files and convert them into normalized intermediate data.
+
+### `APMEBSummaryParser`
+
+Purpose:
+
+- parse `APMEB_Summary.txt`
+- extract calculated mass intervals keyed by baryon, channel, and state
+
+What it will solve:
+
+- isolate all logic related to the summary-file format
+
+### `WaveAnalysisParser`
+
+Purpose:
+
+- parse one `PartWavs_Analysis.txt` file
+- extract per-state wave intervals derived from `value +/- error`
+
+What it will solve:
+
+- convert wave contribution lines into `Interval` objects with uniform representation
+
+### `DiquarkAnalysisParser`
+
+Purpose:
+
+- parse one `DQ_Analysis.txt` file
+- extract per-state diquark intervals derived from `value +/- error`
+
+What it will solve:
+
+- convert baryon-dependent diquark contribution lines into `Interval` objects with uniform representation
+
+## 4. Assembly
+
+### `ResultsAssembler`
+
+Purpose:
+
+- iterate over all expected baryons, flavor assignments, channels, and states
+- load parsed information
+- populate the normalized result tree
+
+Responsibilities:
+
+- read mass intervals from APMEB summary data
+- read wave intervals from matching analysis files
+- read diquark intervals from matching analysis files
+- fill missing quantities with `[NaN, NaN]`
+- attach `WIP` placeholders for PDG and LatticeQCD intervals
+
+What it will solve:
+
+- centralize orchestration logic so parsers remain simple and the writer only sees normalized data
+
+## 5. Output
+
+### `AllResultsWriter`
+
+Purpose:
+
+- write the final hierarchical text file with the required indentation, labels, ordering, and separators
+
+Responsibilities:
+
+- write baryon blocks
+- write heavy-flavor subsections where applicable
+- write channel sections in fixed order
+- write state sections in fixed order
+- render intervals and placeholders
+- render physical diquark labels after flavor substitution
+
+What it will solve:
+
+- keeps formatting concerns separate from parsing and data representation
+
+# Documentation plan
+
+The implementation will be documented in parallel with the code.
+
+Suggested documentation sections:
+
+- project goal
+- input data model
+- output target
+- architecture overview
+- implementation log
+- testing notes
