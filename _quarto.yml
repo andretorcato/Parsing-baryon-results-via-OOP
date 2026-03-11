@@ -12,6 +12,10 @@ website:
         text: About
       - href: input_data.qmd
         text: Input data sources
+      - href: output_file.qmd
+        text: Output file structure
+      - href: architecture_plan.qmd
+        text: Architecture plan for the OOP code
 
 format: # Global default options for the html output
   html:
