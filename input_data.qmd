@@ -1,0 +1,96 @@
+---
+title: "Input Data Sources"
+format: html
+---
+
+# Input Data Sources
+
+This page explains the input data sources.
+
+## Directory of interest
+
+Our directory of interest contains:
+
+- The python code that will parse the baryon results
+- A .txt file called `APMEB_Summary.txt` which contains the baryon mass spectrum results
+- The `baryons/` folder, which contains partial waves and diquark distribution results for all baryons
+
+## Baryon directories
+
+Inside `baryons/`, there are 12 baryon-category folders:
+
+- `Delta`
+- `Lambda_f`
+- `Nucleon`
+- `Omega_fff`
+- `Omega_ffg`
+- `Omega_fgg`
+- `Omega_fgh`
+- `OmegaPrime_fgh`
+- `Sigma_f`
+- `Xi_ff`
+- `Xi_fg`
+- `XiPrime_fg`
+
+This was an arbitrary separation for organizing all baryons. By specifying heavy flavors through `f`, `g` and `h`, we have identified baryons as having:
+
+- Three equal quark flavors: `Nucleon`, `Delta` and `Omega_fff`
+- Two equal quark flavors, plus one heavier flavor: `Lambda_f`, `Sigma_f` and `Omega_ffg`
+- Two equal quark flavors, plus one lighter flavor: `Xi_ff` and `Omega_fgg`
+- Three different quark flavors: `Xi_fg`, `XiPrime_fg`, `Omega_fgh` and `OmegaPrime_fgh` 
+
+## Baryon naming conventions
+
+### Light-only baryons
+
+Baryons without an underscore contain only the light flavor `n`. This is both the up and down flavors, since we cannot distinguish between the two using only purely gluon driven interactions. The baryons which obey this convention are:
+
+- `Delta`
+- `Nucleon`
+
+Different baryons at this stage come about due to different isospin values.
+
+### One heavy-flavor type
+
+Baryons with only `f` after the underscore contain one heavy-flavor type.
+The physical heavy flavor can be:
+
+- Strange (`s`)
+- Charm (`c`)
+- Bottom (`b`)
+
+The baryons which obey this convention are:
+
+- `Lambda_f`
+- `Sigma_f`
+- `Xi_ff`
+- `Omega_fff`
+
+### Two heavy-flavor types
+
+Baryons with `f` and `g` contain two distinct heavy flavors. These are:
+
+- `Xi_fg`
+- `XiPrime_fg`
+- `Omega_ffg`
+- `Omega_fgg`
+
+### Three heavy-flavor types
+
+Baryons with `f`, `g`, and `h` contain three distinct heavy flavors. These are:
+
+- `Omega_fgh`
+- `OmegaPrime_fgh`
+
+## Heavy-flavor ordering rule
+
+The allowed symbolic ordering is `f < g < h`. This means that, for example, if `f = s`, then `g` cannot be a strange flavor and is heavier than `s` too. This also means that, for example, when considering two heavy flavors, `fg`, having `sc` is okay but having `cs` is not an allowed pairing.
+
+In the end, the allowed assignements are:
+
+- `s`, `c` and `b` for one heavy flavor assignements
+- `sc`, `sb` and `cb` for two heavy flavor assignements
+- `scb` for three heavy flavor assignements
+
+
+
