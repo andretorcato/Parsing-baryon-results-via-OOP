@@ -17,7 +17,7 @@ website:
       - href: architecture_plan.qmd
         text: Architecture plan for the OOP code
       - href: python_syntax.qmd
-        text: Python code written so far
+        text: Python Code Explanation
 
 format: # Global default options for the html output
   html:
